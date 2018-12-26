@@ -1,7 +1,17 @@
+//////initializing /////
 const mongoose = require('mongoose');
 const express = require("express");
 const app = express();
 const db = require('./config/keys').mongoURI;
+const bodyParser = require("body-parser");
+/////////end ///////
+
+//////////importing routes///////
+const users = require("./routes/api/users");
+const tweets = require("./routes/api/tweets");
+///////end///////
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 mongoose
   .connect(db, { useNewUrlParser: true })
@@ -9,6 +19,9 @@ mongoose
   .catch(err => console.log(err));
 
 app.get("/", (req, res) => res.send("Heyhey hey There"));
+app.use("/api/users", users);
+app.use("/api/tweets", tweets);
+
 
 const port = process.env.PORT || 5000;
 
