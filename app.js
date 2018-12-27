@@ -4,21 +4,25 @@ const express = require("express");
 const app = express();
 const db = require('./config/keys').mongoURI;
 const bodyParser = require("body-parser");
+const passport = require("passport");
 /////////end ///////
 
 //////////importing routes///////
 const users = require("./routes/api/users");
 const tweets = require("./routes/api/tweets");
 ///////end///////
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(passport.initialize());
+require("./config/passport")(passport);
 
 mongoose
   .connect(db, { useNewUrlParser: true })
   .then(() => console.log("Connected to MongoDB successfully"))
   .catch(err => console.log(err));
 
-app.get("/", (req, res) => res.send("Heyhey hey There"));
+
 app.use("/api/users", users);
 app.use("/api/tweets", tweets);
 
